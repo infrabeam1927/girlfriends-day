@@ -255,6 +255,79 @@
     }
   }
 
+  .gift-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px dashed rgba(194, 71, 138, 0.3);
+    text-align: center;
+  }
+
+  .gift-section h2 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #7a2e5c;
+    font-size: 1.3rem;
+    margin: 0 0 22px;
+  }
+
+  .gift-box {
+    background: none;
+    border: none;
+    font-size: 4rem;
+    line-height: 1;
+    cursor: pointer;
+    animation: wiggle 2.4s ease-in-out infinite;
+    transition: transform 0.15s ease;
+  }
+
+  .gift-box:hover {
+    transform: scale(1.08);
+  }
+
+  .gift-box:active {
+    transform: scale(0.9);
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-4deg); }
+  }
+
+  .gift-hint {
+    margin-top: 8px;
+    color: #a5507f;
+    font-weight: 600;
+  }
+
+  .gift-reveal[hidden] {
+    display: none;
+  }
+
+  .gift-reveal.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .gift-message {
+    font-size: 1.05rem;
+    color: #4a2c3d;
+    line-height: 1.7;
+    margin: 0 0 20px;
+  }
+
+  .gift-amount {
+    color: #c2478a;
+    font-weight: 700;
+  }
+
+  .gift-link {
+    display: inline-block;
+    text-decoration: none;
+  }
+
   @media (max-width: 480px) {
     .card {
       padding: 40px 26px;
@@ -301,6 +374,18 @@
         <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
         <div class="meter-label" id="meterLabel">Tap the heart to find out</div>
         <button class="heart-btn" id="meterBtn" aria-label="Tap to increase the love meter">&#10084;&#65039;</button>
+      </div>
+    </div>
+
+    <div class="gift-section">
+      <h2>one more thing...</h2>
+      <div id="giftWrap">
+        <button class="gift-box" id="giftBtn" aria-label="Open your gift">&#127873;</button>
+        <p class="gift-hint">tap to open your gift</p>
+      </div>
+      <div class="gift-reveal" id="giftReveal" hidden>
+        <p class="gift-message">Surprise! I set aside <span class="gift-amount">$100</span> just for you to spend on anything you want.</p>
+        <a class="pill-btn gift-link" id="giftLink" href="https://www.gymshark.com/" target="_blank" rel="noopener noreferrer">Shop Gymshark &rarr;</a>
       </div>
     </div>
 
@@ -409,6 +494,19 @@
           meterLabel.textContent = 'Tap the heart to find out';
         }, 1400);
       }
+    });
+
+    // Gift reveal
+    const giftBtn = document.getElementById('giftBtn');
+    const giftWrap = document.getElementById('giftWrap');
+    const giftReveal = document.getElementById('giftReveal');
+
+    giftBtn.addEventListener('click', () => {
+      const rect = giftBtn.getBoundingClientRect();
+      spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      giftWrap.style.display = 'none';
+      giftReveal.hidden = false;
+      giftReveal.classList.add('fade-in');
     });
   </script>
 

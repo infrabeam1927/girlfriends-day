@@ -136,6 +136,125 @@
     color: #e07ab0;
   }
 
+  .playground {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px dashed rgba(194, 71, 138, 0.3);
+    text-align: center;
+  }
+
+  .playground h2 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #7a2e5c;
+    font-size: 1.3rem;
+    margin: 0 0 22px;
+  }
+
+  .reason-box {
+    margin-bottom: 42px;
+  }
+
+  #reasonText {
+    min-height: 54px;
+    font-size: 1.05rem;
+    color: #4a2c3d;
+    font-style: italic;
+    line-height: 1.6;
+    transition: opacity 0.25s ease;
+    padding: 0 6px;
+  }
+
+  .pill-btn {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #f087b0, #c2478a);
+    border: none;
+    padding: 12px 26px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(194, 71, 138, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .pill-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(194, 71, 138, 0.45);
+  }
+
+  .pill-btn:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .meter-box p {
+    margin: 0 0 12px;
+    color: #7a2e5c;
+    font-weight: 600;
+  }
+
+  .meter-track {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto 10px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(194, 71, 138, 0.25);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff8fb3, #c2478a);
+    border-radius: 12px;
+    transition: width 0.45s ease;
+  }
+
+  .meter-label {
+    margin: 8px 0 18px;
+    color: #a5507f;
+    font-weight: 600;
+    min-height: 22px;
+  }
+
+  .heart-btn {
+    font-size: 2.4rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.15s ease;
+  }
+
+  .heart-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .heart-btn:active {
+    transform: scale(1.35);
+  }
+
+  .burst-heart {
+    position: fixed;
+    left: 0;
+    top: 0;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    animation: burst 900ms ease-out forwards;
+  }
+
+  @keyframes burst {
+    to {
+      transform: translate(var(--dx), var(--dy)) scale(0.4);
+      opacity: 0;
+    }
+  }
+
   @media (max-width: 480px) {
     .card {
       padding: 40px 26px;
@@ -169,6 +288,22 @@
       <p>Happy Girlfriend's Day, pookie wookie. Here's to us, and to many more.</p>
     </div>
 
+    <div class="playground">
+      <h2>psst, tap around for a bit</h2>
+
+      <div class="reason-box">
+        <p id="reasonText">Tap the button to see a reason I love you</p>
+        <button class="pill-btn" id="reasonBtn">&#128140; Reveal a reason</button>
+      </div>
+
+      <div class="meter-box">
+        <p>How much do I love you?</p>
+        <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+        <div class="meter-label" id="meterLabel">Tap the heart to find out</div>
+        <button class="heart-btn" id="meterBtn" aria-label="Tap to increase the love meter">&#10084;&#65039;</button>
+      </div>
+    </div>
+
     <div class="signoff">
       Yours always,
       <span class="love">&#10084;&#65039;</span>
@@ -191,6 +326,90 @@
       span.style.animationDelay = (Math.random() * 10) + 's';
       heartsContainer.appendChild(span);
     }
+
+    // Reveal-a-reason button
+    const reasons = [
+      "Because you're the smartest person I know, even when you pretend you're not.",
+      "Because you're tiny, but you have the biggest heart of anyone I've ever met.",
+      "Because you care about everyone around you, even when no one's watching.",
+      "Because your laugh is my favorite sound in the whole world.",
+      "Because you make ordinary days feel like something worth remembering.",
+      "Because you're my favorite person to do absolutely nothing with.",
+      "Because you're pookie wookie, and there is only one of you.",
+      "Because loving you is the easiest thing I do all day.",
+      "Because you're the best person I know, and I don't say that lightly.",
+      "Because you still make my heart do a little flip. Every time.",
+      "Because you're sweet even on your worst days.",
+      "Okay, fine, tap again. There's more where that came from."
+    ];
+    let lastReasonIndex = -1;
+    const reasonText = document.getElementById('reasonText');
+    const reasonBtn = document.getElementById('reasonBtn');
+
+    reasonBtn.addEventListener('click', () => {
+      let index;
+      do {
+        index = Math.floor(Math.random() * reasons.length);
+      } while (index === lastReasonIndex && reasons.length > 1);
+      lastReasonIndex = index;
+
+      reasonText.style.opacity = 0;
+      setTimeout(() => {
+        reasonText.textContent = reasons[index];
+        reasonText.style.opacity = 1;
+      }, 250);
+
+      reasonBtn.textContent = '\u{1F48C} Reveal another reason';
+    });
+
+    // Love-o-meter
+    const meterFill = document.getElementById('meterFill');
+    const meterLabel = document.getElementById('meterLabel');
+    const meterBtn = document.getElementById('meterBtn');
+    let loveLevel = 0;
+
+    const labelForLevel = (level) => {
+      if (level >= 100) return 'INFINITE ♾️';
+      if (level >= 80) return 'Almost infinite...';
+      if (level >= 60) return 'So, so much';
+      if (level >= 40) return 'A whole lot';
+      if (level >= 20) return 'Getting there';
+      return 'Warming up';
+    };
+
+    function spawnBurst(originX, originY) {
+      const symbols = ['❤️', '\u{1F495}', '\u{1F496}', '\u{1F497}'];
+      const count = 26;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('span');
+        el.className = 'burst-heart';
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 80 + Math.random() * 140;
+        el.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+        el.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
+        el.style.left = originX + 'px';
+        el.style.top = originY + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 950);
+      }
+    }
+
+    meterBtn.addEventListener('click', () => {
+      loveLevel = Math.min(100, loveLevel + 12 + Math.floor(Math.random() * 14));
+      meterFill.style.width = loveLevel + '%';
+      meterLabel.textContent = labelForLevel(loveLevel);
+
+      if (loveLevel >= 100) {
+        const rect = meterBtn.getBoundingClientRect();
+        spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        setTimeout(() => {
+          loveLevel = 0;
+          meterFill.style.width = '0%';
+          meterLabel.textContent = 'Tap the heart to find out';
+        }, 1400);
+      }
+    });
   </script>
 
 </body>
